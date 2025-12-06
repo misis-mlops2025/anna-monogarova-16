@@ -1,11 +1,12 @@
-def sum_two(a, b):
-    return a + b
+def sum_three(a, b, c):
+    return a + b + c
 
 
 def main():
     x = 2
     y = 3
-    print(sum_two(x, y))
+    z = 4
+    print(sum_three(x, y, z))
 
 
 if __name__ == "__main__":
