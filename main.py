@@ -1,12 +1,20 @@
-def sum_three(a, b, c):
-    return a + b + c
+def sum_n(*args):
+    return sum(args)
 
 
 def main():
-    x = 2
-    y = 3
-    z = 4
-    print(sum_three(x, y, z))
+    numbers = [1, 2, 3, 4]
+    print(sum_n(*numbers))
+
+
+if __name__ == "__main__":
+    def sum_n(*args):
+    return sum(args)
+
+
+def main():
+    numbers = [1, 2, 3, 4]
+    print(sum_n(*numbers))
 
 
 if __name__ == "__main__":
