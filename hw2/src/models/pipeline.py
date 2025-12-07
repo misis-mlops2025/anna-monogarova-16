@@ -37,5 +37,7 @@ def train_pipeline(data_cfg, model_cfg, train_cfg):
     model.fit(X_train, y_train)
 
     predictions = model.predict(X_test)
-    return accuracy_score(y_test, predictions)
+    accuracy = accuracy_score(y_test, predictions)
+    return accuracy, model
+
 

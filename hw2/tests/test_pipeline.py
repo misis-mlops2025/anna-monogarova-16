@@ -25,7 +25,10 @@ def test_build_model():
 
 
 def test_train_pipeline_runs():
-    acc = train_pipeline(DataConfig(n_samples=100), ModelConfig(), 
-TrainConfig())
-    assert 0 <= acc <= 1
+    accuracy, _ = train_pipeline(
+        DataConfig(n_samples=100),
+        ModelConfig(),
+        TrainConfig()
+    )
+    assert 0 <= accuracy <= 1
 

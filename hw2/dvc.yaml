@@ -1,0 +1,13 @@
+stages:
+  train_model:
+    cmd: python -m src.models.train
+    deps:
+    - params.yaml
+    - src/models/config.py
+    - src/models/pipeline.py
+    - src/models/train.py
+    outs:
+    - models/model.pkl
+    metrics:
+    - reports/metrics.json:
+        cache: false
