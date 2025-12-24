@@ -1,0 +1,12 @@
+FROM apache/airflow:2.10.3
+
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+USER airflow
+RUN pip install --no-cache-dir \
+    scikit-learn==1.5.2 \
+    pandas==2.2.3 \
+    numpy==2.1.3
