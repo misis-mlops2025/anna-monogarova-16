@@ -1,0 +1,8 @@
+scikit-learn
+numpy
+pydantic
+pytest
+pytest-cov
+pylint
+hydra-core
+

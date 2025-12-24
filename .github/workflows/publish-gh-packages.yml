@@ -1,0 +1,58 @@
+name: CD - Publish package to GitHub Packages (PR to master)
+
+on:
+  pull_request:
+    branches: ["master"]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hw2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+
+      - name: Set unique prerelease version for PR
+        run: |
+          python - <<'PY'
+          import re, pathlib, os
+          run = os.environ["GITHUB_RUN_NUMBER"]
+          p = pathlib.Path("setup.py")
+          s = p.read_text(encoding="utf-8")
+          s2 = re.sub(r'version\s*=\s*[\'"]([^\'"]+)[\'"]',
+                      f'version="0.1.0.dev{run}"',
+                      s, count=1)
+          p.write_text(s2, encoding="utf-8")
+          print("Updated setup.py version ->", f"0.1.0.dev{run}")
+          PY
+
+      - name: Build package
+        run: |
+          python -m build
+
+      - name: Publish to GitHub Packages
+        env:
+          TWINE_USERNAME: ${{ github.actor }}
+          TWINE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python -m twine upload \
+            --repository-url https://pip.pkg.github.com/misis-mlops2025/ \
+            dist/*
+

@@ -1,0 +1,73 @@
+services:
+  airflow-webserver:
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    image: hw4-airflow:2.10.3
+
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow_db/airflow.db
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
+      _PIP_ADDITIONAL_REQUIREMENTS: "pandas==2.2.3 scikit-learn==1.5.2 joblib==1.4.2"
+
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./scripts:/opt/scripts
+      - ./data:/opt/data
+      - ./models:/opt/models
+      - ./predictions:/opt/predictions
+      - ./logs:/opt/airflow/logs
+      - ./airflow_db:/opt/airflow/airflow_db
+    ports:
+      - "8081:8080"
+    command: webserver
+
+  airflow-scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    image: hw4-airflow:2.10.3
+
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow_db/airflow.db
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
+      _PIP_ADDITIONAL_REQUIREMENTS: "pandas==2.2.3 scikit-learn==1.5.2 joblib==1.4.2"
+
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./scripts:/opt/scripts
+      - ./data:/opt/data
+      - ./models:/opt/models
+      - ./predictions:/opt/predictions
+      - ./logs:/opt/airflow/logs
+      - ./airflow_db:/opt/airflow/airflow_db
+    command: scheduler
+
+  airflow-init:
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    image: hw4-airflow:2.10.3
+
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow_db/airflow.db
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
+      _PIP_ADDITIONAL_REQUIREMENTS: "pandas==2.2.3 scikit-learn==1.5.2 joblib==1.4.2"
+
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./scripts:/opt/scripts
+      - ./data:/opt/data
+      - ./models:/opt/models
+      - ./predictions:/opt/predictions
+      - ./logs:/opt/airflow/logs
+      - ./airflow_db:/opt/airflow/airflow_db
+    command: >
+      bash -c "airflow db migrate &&
+               airflow users create --username admin --password admin --firstname admin --lastname admin --role Admin --email admin@example.com"
