@@ -1,0 +1,25 @@
+# python
+__pycache__/
+*.pyc
+.venv
+.env
+
+# airflow
+logs/
+airflow_db/
+
+# runtime data
+data/new_data.csv
+
+# OS
+.DS_Store
+
+# HW4 artifacts
+data/*.csv
+models/*.joblib
+models/*.json
+predictions/*.csv
+airflow_db/
+logs/
+__pycache__/
+

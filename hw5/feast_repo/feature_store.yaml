@@ -1,0 +1,10 @@
+project: hw5_feast
+registry: ../feast_registry/registry.db
+provider: local
+online_store:
+  type: sqlite
+  path: ../feast_registry/online.db
+offline_store:
+  type: file
+
+
