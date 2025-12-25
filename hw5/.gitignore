@@ -1,0 +1,10 @@
+data/
+models/
+predictions/
+feast_registry/
+airflow_db/
+logs/
+__pycache__/
+*.pyc
+*.db
+

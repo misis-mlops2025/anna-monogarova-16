@@ -1,0 +1,103 @@
+services:
+  airflow-webserver:
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow_db/airflow.db
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./scripts:/opt/scripts
+      - ./feast_repo:/opt/feast_repo
+      - ./data:/opt/data
+      - ./models:/opt/models
+      - ./predictions:/opt/predictions
+      - ./logs:/opt/airflow/logs
+      - ./airflow_db:/opt/airflow/airflow_db
+      - type: bind
+        source: /Users/anna/anna-monogarova-16/hw5/feast_registry
+        target: /opt/feast_registry
+        bind:
+          create_host_path: true
+
+    ports:
+      - "8091:8080"
+    command: webserver
+
+  airflow-scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow_db/airflow.db
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./scripts:/opt/scripts
+      - ./feast_repo:/opt/feast_repo
+      - ./data:/opt/data
+      - ./models:/opt/models
+      - ./predictions:/opt/predictions
+      - ./logs:/opt/airflow/logs
+      - ./airflow_db:/opt/airflow/airflow_db
+      - type: bind
+        source: /Users/anna/anna-monogarova-16/hw5/feast_registry
+        target: /opt/feast_registry
+        bind:
+          create_host_path: true
+
+    command: scheduler
+
+  airflow-init:
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow_db/airflow.db
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./scripts:/opt/scripts
+      - ./feast_repo:/opt/feast_repo
+      - ./data:/opt/data
+      - ./models:/opt/models
+      - ./predictions:/opt/predictions
+      - ./logs:/opt/airflow/logs
+      - ./airflow_db:/opt/airflow/airflow_db
+      - type: bind
+        source: /Users/anna/anna-monogarova-16/hw5/feast_registry
+        target: /opt/feast_registry
+        bind:
+          create_host_path: true
+
+    command:
+      - bash
+      - -c
+      - >
+        airflow db migrate &&
+        airflow users create --username admin --password admin
+        --firstname admin --lastname admin --role Admin
+        --email admin@example.com
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    entrypoint: ""
+    command: uvicorn app:app --host 0.0.0.0 --port 8000 --app-dir /opt/api
+    ports:  
+      - "8092:8000"
+    volumes:
+      - ./feast_repo:/opt/feast_repo
+      - ./feast_registry:/opt/feast_registry
+      - ./models:/opt/models
+      - ./api:/opt/api
+
+
+
